@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+remote_write:
+  - url: http://testnet-metrics.chainbase.com:9090/api/v1/write
+scrape_configs:
+  - job_name: "avs"
+    static_configs:
+      - targets: ["host.docker.internal:8080"]

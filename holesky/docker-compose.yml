@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    container_name: ${PROMETHEUS_NAME}
+    env_file:
+      - .env
+    volumes:
+      - "${PROMETHEUS_CONFIG_PATH}:/etc/prometheus/prometheus.yml"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "${NODE_PROMETHEUS_PORT}:9090"
+    networks:
+      - chainbase
+    restart: unless-stopped
+
+  flink-jobmanager:
+    image: ${FLINK_JOBMANAGER_IMAGE}
+    container_name: ${FLINK_JOBMANAGER_NAME}
+    env_file:
+      - .env
+    ports:
+      - "${FLINK_JOBMANAGER_PORT}:8081"
+    command: jobmanager
+    networks:
+      - chainbase
+    restart: unless-stopped
+
+  flink-taskmanager:
+    image: ${FLINK_JOBMANAGER_IMAGE}
+    container_name: ${FLINK_TASKMANAGER_NAME}
+    env_file:
+      - .env
+    depends_on:
+      - flink-jobmanager
+    command: taskmanager
+    networks:
+      - chainbase
+    restart: unless-stopped
+
+  chainbase-node:
+    image: ${MAIN_SERVICE_IMAGE}
+    container_name: ${MAIN_SERVICE_NAME}
+    env_file:
+      - .env
+    ports:
+      - "${NODE_APP_PORT}:8080"
+      - "${NODE_METRICS_PORT}:${NODE_METRICS_PORT}"
+    volumes:
+      - "${NODE_ECDSA_KEY_FILE_HOST:-./opr.ecdsa.key.json}:${NODE_ECDSA_KEY_FILE}"
+      - "${NODE_LOG_PATH_HOST}:${NODE_LOG_DIR}:rw"
+    depends_on:
+      - prometheus
+      - flink-jobmanager
+      - flink-taskmanager
+    networks:
+      - chainbase
+    restart: unless-stopped
