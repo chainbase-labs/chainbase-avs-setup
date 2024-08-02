@@ -1,14 +1,18 @@
 global:
-  scrape_interval: 30s # Set the scrape interval to every 30 seconds.
-  evaluation_interval: 30s # Evaluate rules every 30 seconds.
+  scrape_interval: 15s
+  evaluation_interval: 15s
   external_labels:
-    instance: "${YOUR_OPERATOR_NAME}" # replace this with your Operator name you want to be identified by, it helps us route alerts and metrics to your notification channels easily
+    operator: "${YOUR_OPERATOR_NAME}" # replace this with your Operator name you want to be identified by, it helps us route alerts and metrics to your notification channels easily
 
 remote_write:
   - url: http://testnet-metrics.chainbase.com:9090/api/v1/write
+    write_relabel_configs:
+      - source_labels: [job]
+        regex: "chainbase-avs"
+        action: keep
 
 scrape_configs:
   - job_name: "chainbase-avs"
     metrics_path: /metrics
     static_configs:
-      - targets: ["chainbase-node:8080"]
+      - targets: ["chainbase-node:9092"]

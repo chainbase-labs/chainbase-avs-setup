@@ -8,7 +8,8 @@ services:
       - .env
     volumes:
       - "${PROMETHEUS_CONFIG_PATH}:/etc/prometheus/prometheus.yml"
-    command:
+    command: 
+      - "--enable-feature=expand-external-labels"
       - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - "${NODE_PROMETHEUS_PORT}:9090"
@@ -46,7 +47,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${NODE_APP_PORT}:8080"
+      - "${NODE_APP_PORT}:${NODE_APP_PORT}"
       - "${NODE_METRICS_PORT}:${NODE_METRICS_PORT}"
     volumes:
       - "${NODE_ECDSA_KEY_FILE_HOST:-./opr.ecdsa.key.json}:${NODE_ECDSA_KEY_FILE}"
