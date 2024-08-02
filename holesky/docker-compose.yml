@@ -58,3 +58,7 @@ services:
     networks:
       - chainbase
     restart: unless-stopped
+
+networks:
+  chainbase:
+    driver: bridge
