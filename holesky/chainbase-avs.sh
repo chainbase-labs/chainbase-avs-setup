@@ -24,10 +24,11 @@ stop_chainbase_avs() {
 }
 
 print_help() {
-  echo "Usage: $0 {register|run|help}"
+  echo "Usage: $0 {register|run|stop|help}"
   echo "Commands:"
   echo "  register    Register the Chainbase AVS"
   echo "  run         Run the Chainbase AVS"
+  echo "  stop        Stop the Chainbase AVS"
   echo "  help        Display this help message"
 }
 
