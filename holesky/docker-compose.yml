@@ -44,6 +44,7 @@ services:
   chainbase-node:
     image: ${MAIN_SERVICE_IMAGE}
     container_name: ${MAIN_SERVICE_NAME}
+    command: ["run"]
     env_file:
       - .env
     ports:
