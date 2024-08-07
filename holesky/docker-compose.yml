@@ -20,8 +20,6 @@ services:
     container_name: ${FLINK_JOBMANAGER_NAME}
     env_file:
       - .env
-    ports:
-      - "${FLINK_JOBMANAGER_PORT}:8081"
     command: jobmanager
     networks:
       - chainbase
