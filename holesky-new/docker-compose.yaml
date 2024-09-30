@@ -1,0 +1,57 @@
+services:
+  jobmanager:
+    image: repository.chainbase.com/network/flink:v1.18-0.2
+    container_name: chainbase_jobmanager
+    hostname: chainbase_jobmanager
+    #user: "flink"
+    command: "./bin/jobmanager.sh start-foreground "
+    volumes:
+      - ./proof:/opt/proof
+    networks:
+      - avs_network
+
+  taskmanager:
+    image: repository.chainbase.com/network/flink:v1.18-0.2
+    container_name: chainbase_taskmanager
+    hostname: chainbase_taskmanager
+    #user: "flink"
+    depends_on:
+      - jobmanager
+    command: "./bin/taskmanager.sh start-foreground"
+    networks:
+      - avs_network
+
+  postgres:
+    image: postgres:16.4
+    container_name: chainbase_postgres
+    hostname: chainbase_postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./schema:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-node}
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+  node:
+    image: ${NODE_IMAGE}
+    container_name: chainbase_node
+    hostname: chainbase_node
+    ports:
+      - "8011:8011"
+    environment:
+      - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
+      - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}
+    volumes:
+      - ./node.yaml:/app/node.yaml
+      - ${NODE_ECDSA_KEY_FILE_PATH}:/app/node.ecdsa.key.json
+      - ${NODE_BLS_KEY_FILE_PATH}:/app/node.bls.key.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - avs_network
+
+networks:
+  avs_network:
