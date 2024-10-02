@@ -4,7 +4,7 @@ services:
     container_name: chainbase_jobmanager
     hostname: chainbase_jobmanager
     #user: "flink"
-    command: "./bin/jobmanager.sh start-foreground "
+    command: "./bin/jobmanager.sh start-foreground"
     volumes:
       - ./proof:/opt/proof
     networks:
