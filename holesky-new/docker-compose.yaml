@@ -1,4 +1,32 @@
 services:
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    container_name: prometheus
+    hostname: prometheus
+    volumes:
+      - "./monitor-config/prometheus.yml:/etc/prometheus/prometheus.yml"
+    command: 
+      - "--enable-feature=expand-external-labels"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+
+  grafana:
+    image: grafana/grafana:11.1.7
+    container_name: grafana
+    hostname: grafana
+    volumes:
+      - "./monitor-config/grafana:/etc/grafana"
+      - "./monitor-config/dashboards:/var/lib/grafana/dashboards"
+    ports:
+      - 3000:3000
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+
   jobmanager:
     image: repository.chainbase.com/network/flink:v1.18-0.2
     container_name: chainbase_jobmanager
