@@ -20,9 +20,9 @@ node_grpc_server_address: :8011
 node_socket: your node socket like 8.219.81.93:8011
 
 # avs node spec compliance https://eigen.nethermind.io/docs/spec/intro
-eigen_metrics_ip_port_address: localhost:9090
+eigen_metrics_ip_port_address: :9090
 enable_metrics: true
-node_api_ip_port_address: localhost:9010
+node_api_ip_port_address: :9010
 enable_node_api: true
 
 # postgres container
@@ -31,3 +31,7 @@ postgres_port: 5432
 postgres_user: postgres
 postgres_password: postgres
 postgres_database: manuscript_node
+
+# job manager container
+job_manager_host: chainbase_jobmanager
+job_manager_port: 8081
