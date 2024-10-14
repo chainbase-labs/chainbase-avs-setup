@@ -69,6 +69,8 @@ services:
     environment:
       - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
       - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}
+      - OPERATOR_ADDRESS=${OPERATOR_ADDRESS}
+      - NODE_SOCKET=${NODE_SOCKET}
     volumes:
       - ./node.yaml:/app/node.yaml
       - ${NODE_ECDSA_KEY_FILE_PATH}:/app/node.ecdsa.key.json

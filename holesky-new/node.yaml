@@ -7,7 +7,6 @@ operator_state_retriever_address: 0x3e302917A4d007eAF367c182226Da217E9639d38
 eth_rpc_url: https://ethereum-holesky-rpc.publicnode.com
 eth_ws_url: wss://ethereum-holesky-rpc.publicnode.com
 
-operator_address: your ecdsa key address
 ecdsa_private_key_store_path: /app/node.ecdsa.key.json
 bls_private_key_store_path: /app/node.bls.key.json
 
@@ -15,9 +14,6 @@ bls_private_key_store_path: /app/node.bls.key.json
 coordinator_server_ip_port_address: 8.219.212.110:8090
 # node groc server address
 node_grpc_server_address: :8011
-# ip address and port of the Node gRPC server.
-# This public address is submitted to the contract during the RegisterOperatorWithAvs and can be requested by the coordinator.
-node_socket: your node socket like 8.219.81.93:8011
 
 # avs node spec compliance https://eigen.nethermind.io/docs/spec/intro
 eigen_metrics_ip_port_address: :9090
