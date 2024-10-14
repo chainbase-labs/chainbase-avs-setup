@@ -15,7 +15,7 @@ scrape_configs:
   - job_name: "chainbase-avs"
     metrics_path: /metrics
     static_configs:
-      - targets: ["chainbase_node:9090"]
+      - targets: ["manuscript_node:9090"]
 
   - job_name: "flink"
     metrics_path: /metrics
