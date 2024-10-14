@@ -1,11 +1,11 @@
 services:
   prometheus:
-    image: ${PROMETHEUS_IMAGE}
+    image: prom/prometheus:v2.51.2
     container_name: prometheus
     hostname: prometheus
     volumes:
       - "./monitor-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
-    command: 
+    command:
       - "--enable-feature=expand-external-labels"
       - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
@@ -13,20 +13,20 @@ services:
     restart: unless-stopped
 
   grafana:
-    image: ${GRAFANA_IMAGE}
+    image: grafana/grafana:11.1.7
     container_name: grafana
     hostname: grafana
     volumes:
       - "./monitor-config/grafana:/etc/grafana"
       - "./monitor-config/dashboards:/var/lib/grafana/dashboards"
     ports:
-      - ${GRAFANA_PORT}:3000
+      - 3000:3000
     networks:
       - avs_network
     restart: unless-stopped
 
   jobmanager:
-    image: ${MS_FLINK_IMAGE}
+    image: repository.chainbase.com/network/ms_flink:v1.1-test
     container_name: chainbase_jobmanager
     hostname: chainbase_jobmanager
     command: "./bin/jobmanager.sh start-foreground"
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   taskmanager:
-    image: ${MS_FLINK_IMAGE}
+    image: repository.chainbase.com/network/ms_flink:v1.1-test
     container_name: chainbase_taskmanager
     hostname: chainbase_taskmanager
     depends_on:
@@ -61,11 +61,11 @@ services:
     restart: unless-stopped
 
   node:
-    image: ${NODE_IMAGE}
+    image: repository.chainbase.com/network/chainbase-cli:v0.2.0-test-19
     container_name: manuscript_node
     hostname: manuscript_node
     ports:
-      - ${AVS_NODE_PORT}:8011
+      - 8011:8011
     environment:
       - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
       - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}

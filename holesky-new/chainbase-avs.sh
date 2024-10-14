@@ -10,7 +10,7 @@ register_chainbase_avs() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "${CLI_IMAGE}" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-19" \
     --config /app/node.yaml "register-operator-with-avs"
 }
 
