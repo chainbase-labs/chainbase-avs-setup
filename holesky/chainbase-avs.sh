@@ -10,7 +10,7 @@ register_chainbase_avs() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-20" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-21" \
     --config /app/node.yaml "register-operator-with-avs"
 }
 
@@ -21,7 +21,7 @@ deregister_chainbase_avs() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-20" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-21" \
     --config /app/node.yaml "deregister-operator-with-avs"
 }
 
@@ -43,8 +43,8 @@ test_manuscript_node() {
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
     --volume "/var/run/docker.sock:/var/run/docker.sock"\
-    --network "holesky-new_avs_network" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-20" \
+    --network "holesky_avs_network" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-21" \
     --config /app/node.yaml "test-manuscript-node-task"
 }
 
@@ -55,7 +55,7 @@ update_node_socket() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-20" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.0-test-21" \
     --config /app/node.yaml "update-operator-socket"
 }
 
