@@ -1,6 +1,6 @@
 services:
   prometheus:
-    image: prom/prometheus:v2.51.2
+    image: ${PROMETHEUS_IMAGE}
     container_name: prometheus
     hostname: prometheus
     volumes:
@@ -13,37 +13,31 @@ services:
     restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:11.1.7
+    image: ${GRAFANA_IMAGE}
     container_name: grafana
     hostname: grafana
     volumes:
       - "./monitor-config/grafana:/etc/grafana"
       - "./monitor-config/dashboards:/var/lib/grafana/dashboards"
     ports:
-      - 3000:3000
+      - ${GRAFANA_PORT}:3000
     networks:
       - avs_network
     restart: unless-stopped
 
   jobmanager:
-    image: repository.chainbase.com/network/flink:v1.18-0.2
+    image: ${MS_FLINK_IMAGE}
     container_name: chainbase_jobmanager
     hostname: chainbase_jobmanager
-    #user: "flink"
     command: "./bin/jobmanager.sh start-foreground"
-    volumes:
-      - ./proof/target/proof-1.0-SNAPSHOT.jar:/opt/proof/proof-1.0-SNAPSHOT.jar
     networks:
       - avs_network
     restart: unless-stopped
 
   taskmanager:
-    image: repository.chainbase.com/network/flink:v1.18-0.2
+    image: ${MS_FLINK_IMAGE}
     container_name: chainbase_taskmanager
     hostname: chainbase_taskmanager
-    #user: "flink"
-    volumes:
-      - ./flink-config/flink-conf.yaml:/opt/config/flink-conf.yaml
     depends_on:
       - jobmanager
     command: "./bin/taskmanager.sh start-foreground"
@@ -68,10 +62,10 @@ services:
 
   node:
     image: ${NODE_IMAGE}
-    container_name: chainbase_node
-    hostname: chainbase_node
+    container_name: manuscript_node
+    hostname: manuscript_node
     ports:
-      - "8011:8011"
+      - ${AVS_NODE_PORT}:8011
     environment:
       - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
       - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}
