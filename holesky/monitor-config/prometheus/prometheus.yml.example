@@ -2,8 +2,8 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    operator: "${YOUR_OPERATOR_NAME}" # replace this with your Operator name you want to be identified by, it helps us route alerts and metrics to your notification channels easily
-
+    operator: ${OPERATOR_NAME} 
+    
 remote_write:
   - url: http://testnet-metrics.chainbase.com:9090/api/v1/write
     write_relabel_configs:

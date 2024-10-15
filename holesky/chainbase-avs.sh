@@ -27,7 +27,12 @@ deregister_chainbase_avs() {
 
 run_manuscript_node() {
   echo "Running Chainbase AVS"
-  docker-compose up -d
+  docker compose up -d
+}
+
+runall_manuscript_node() {
+  echo "Running Chainbase AVS"
+  docker compose --profile grafana up -d
 }
 
 stop_manuscript_node() {
@@ -65,6 +70,7 @@ print_help() {
   echo "  register      Register the Chainbase AVS"
   echo "  deregister    Deregister the Chainbase AVS"
   echo "  run           Run Chainbase AVS manuscript node"
+  echo "  runall        Run Chainbase AVS manuscript node include grafana"
   echo "  stop          Stop Chainbase AVS manuscript node"
   echo "  test          Run test task on Chainbase AVS manuscript node"
   echo "  update        Update manuscript node socket on chain"
@@ -80,6 +86,9 @@ case "$1" in
     ;;
   run)
     run_manuscript_node
+    ;;
+  run)
+    runall_manuscript_node
     ;;
   stop)
     stop_manuscript_node
