@@ -3,6 +3,10 @@
 
 . ./.env
 
+change_run_permission() {
+  chmod +x ./monitor-config/prometheus/run.sh
+}
+
 register_chainbase_avs() {
   echo "Registering Chainbase AVS, ECDSA key path: $NODE_ECDSA_KEY_FILE_PATH ,BLS key path: $NODE_BLS_KEY_FILE_PATH"
   docker run --env-file .env \
@@ -65,7 +69,7 @@ update_node_socket() {
 }
 
 print_help() {
-  echo "Usage: $0 {register|run|stop|help}"
+  echo "Usage: $0 {register|deregister|run|runall|stop|test|help}"
   echo "Commands:"
   echo "  register      Register the Chainbase AVS"
   echo "  deregister    Deregister the Chainbase AVS"
@@ -85,9 +89,11 @@ case "$1" in
     deregister_chainbase_avs
     ;;
   run)
+    change_run_permission
     run_manuscript_node
     ;;
-  run)
+  runall)
+    change_run_permission
     runall_manuscript_node
     ;;
   stop)
