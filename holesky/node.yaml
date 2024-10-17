@@ -1,0 +1,33 @@
+# this sets the logger level (true = info, false = debug)
+production: false
+# avs contract
+avs_registry_coordinator_address: 0xb8B9351a6D21fd9b3249713353ACf430BE2e6bBc
+operator_state_retriever_address: 0x3e302917A4d007eAF367c182226Da217E9639d38
+# ETH RPC URL
+eth_rpc_url: https://ethereum-holesky-rpc.publicnode.com
+eth_ws_url: wss://ethereum-holesky-rpc.publicnode.com
+
+ecdsa_private_key_store_path: /app/node.ecdsa.key.json
+bls_private_key_store_path: /app/node.bls.key.json
+
+# address which the coordinator listens on for manuscript node signed messages
+coordinator_server_ip_port_address: 8.219.212.110:8090
+# node groc server address
+node_grpc_server_address: :8011
+
+# avs node spec compliance https://eigen.nethermind.io/docs/spec/intro
+eigen_metrics_ip_port_address: :9090
+enable_metrics: true
+node_api_ip_port_address: :9010
+enable_node_api: true
+
+# postgres container
+postgres_host: postgres
+postgres_port: 5432
+postgres_user: postgres
+postgres_password: postgres
+postgres_database: manuscript_node
+
+# job manager container
+job_manager_host: chainbase_jobmanager
+job_manager_port: 8081
