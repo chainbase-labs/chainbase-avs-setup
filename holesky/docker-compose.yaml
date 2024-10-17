@@ -1,6 +1,6 @@
 services:
   jobmanager:
-    image: repository.chainbase.com/network/ms_flink:${FLINK_JOB_MANAGER_VERSION:-v1.2-test}
+    image: repository.chainbase.com/network/ms_flink:v1.2-test
     container_name: chainbase_jobmanager
     hostname: chainbase_jobmanager
     command: "./bin/jobmanager.sh start-foreground"
@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
 
   taskmanager:
-    image: repository.chainbase.com/network/ms_flink:${FLINK_TASK_MANAGER_VERSION:-v1.2-test}
+    image: repository.chainbase.com/network/ms_flink:v1.2-test
     container_name: chainbase_taskmanager
     hostname: chainbase_taskmanager
     depends_on:
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: postgres:${POSTGRES_VERSION:-16.4}
+    image: postgres:16.4
     container_name: chainbase_postgres
     hostname: chainbase_postgres
     volumes:
@@ -35,11 +35,11 @@ services:
     restart: unless-stopped
 
   node:
-    image: repository.chainbase.com/network/chainbase-node:${NODE_VERSION:-v0.2.0-test-21}
+    image: repository.chainbase.com/network/chainbase-node:v0.2.0
     container_name: manuscript_node
     hostname: manuscript_node
     ports:
-      - ${NODE_EXTERNAL_PORT}:8011
+      - 8011:8011
     environment:
       - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
       - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}
@@ -59,14 +59,12 @@ services:
       - taskmanager
 
   prometheus:
-    image: prom/prometheus:${PROMETHEUS_VERSION:-v2.51.2}
+    image: prom/prometheus:v2.51.2
     user: ":"
     container_name: prometheus
     hostname: prometheus
     environment:
       - OPERATOR_NAME=${OPERATOR_NAME}
-    ports:
-      - ${PROMETHEUS_EXTERNAL_PORT}:${PROMETHEUS_PORT}
     volumes:
       - "./monitor-config/prometheus:/etc/prometheus"
     entrypoint: /etc/prometheus/run.sh
@@ -79,7 +77,7 @@ services:
       - taskmanager
 
   grafana:
-    image: grafana/grafana:${GRAFANA_VERSION:-11.1.7}
+    image: grafana/grafana:11.1.7
     user: ":"
     container_name: grafana
     hostname: grafana
@@ -87,14 +85,12 @@ services:
       - "./monitor-config/grafana:/etc/grafana"
       - "./monitor-config/dashboards:/var/lib/grafana/dashboards"
     ports:
-      - ${GRAFANA_EXTERNAL_PORT}:${GRAFANA_PORT}
+      - 3010:3000
     networks:
       - avs_network
     restart: unless-stopped
     depends_on:
       - prometheus
-    profiles:
-      - grafana
 
 networks:
   avs_network:
