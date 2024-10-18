@@ -1,3 +1,5 @@
 .env
 .DS_Store
 .idea
+holesky/postgres_data
+holesky/monitor-config/prometheus/prometheus.yml
