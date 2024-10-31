@@ -1,0 +1,96 @@
+services:
+  jobmanager:
+    image: repository.chainbase.com/network/ms_flink:v1.2-test
+    container_name: chainbase_jobmanager
+    hostname: chainbase_jobmanager
+    command: "./bin/jobmanager.sh start-foreground"
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+  taskmanager:
+    image: repository.chainbase.com/network/ms_flink:v1.2-test
+    container_name: chainbase_taskmanager
+    hostname: chainbase_taskmanager
+    depends_on:
+      - jobmanager
+    command: "./bin/taskmanager.sh start-foreground"
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16.4
+    container_name: chainbase_postgres
+    hostname: chainbase_postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./schema:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-node}
+    networks:
+      - avs_network
+    restart: unless-stopped
+
+  node:
+    image: repository.chainbase.com/network/chainbase-node:v0.2.3
+    container_name: manuscript_node
+    hostname: manuscript_node
+    ports:
+      - 8011:8011
+    environment:
+      - OPERATOR_ECDSA_KEY_PASSWORD=${OPERATOR_ECDSA_KEY_PASSWORD}
+      - OPERATOR_BLS_KEY_PASSWORD=${OPERATOR_BLS_KEY_PASSWORD}
+      - OPERATOR_ADDRESS=${OPERATOR_ADDRESS}
+      - NODE_SOCKET=${NODE_SOCKET}
+    volumes:
+      - ./node.yaml:/app/node.yaml
+      - ${NODE_ECDSA_KEY_FILE_PATH}:/app/node.ecdsa.key.json
+      - ${NODE_BLS_KEY_FILE_PATH}:/app/node.bls.key.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - avs_network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - jobmanager
+      - taskmanager
+
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    user: ":"
+    container_name: prometheus
+    hostname: prometheus
+    environment:
+      - OPERATOR_NAME=${OPERATOR_NAME}
+    volumes:
+      - "./monitor-config/prometheus:/etc/prometheus"
+    entrypoint: /etc/prometheus/run.sh
+    networks:
+      - avs_network
+    restart: unless-stopped
+    depends_on:
+      - node
+      - jobmanager
+      - taskmanager
+
+  grafana:
+    image: grafana/grafana:11.1.7
+    user: ":"
+    container_name: grafana
+    hostname: grafana
+    volumes:
+      - "./monitor-config/grafana:/etc/grafana"
+      - "./monitor-config/dashboards:/var/lib/grafana/dashboards"
+    ports:
+      - 3010:3000
+    networks:
+      - avs_network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+networks:
+  avs_network:

@@ -2,4 +2,6 @@
 .DS_Store
 .idea
 holesky/postgres_data
+mainnet/postgres_data
 holesky/monitor-config/prometheus/prometheus.yml
+mainnet/monitor-config/prometheus/prometheus.yml

@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    operator: ${OPERATOR_NAME} 
+    
+remote_write:
+  - url: http://mainnet-metrics.chainbase.com/api/v1/write
+    write_relabel_configs:
+      - source_labels: [job]
+        regex: "chainbase-avs"
+        action: keep
+
+scrape_configs:
+  - job_name: "chainbase-avs"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["manuscript_node:9090"]
+
+  - job_name: "flink"
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+        - "chainbase_taskmanager:9249"
+        - "chainbase_jobmanager:9249"
