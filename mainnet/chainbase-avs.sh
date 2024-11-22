@@ -47,7 +47,7 @@ test_manuscript_node() {
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
     --volume "/var/run/docker.sock:/var/run/docker.sock"\
-    --network "holesky_avs_network" \
+    --network "mainnet_avs_network" \
     "repository.chainbase.com/network/chainbase-cli:v0.2.3" \
     --config /app/node.yaml "test-manuscript-node-task"
 }
