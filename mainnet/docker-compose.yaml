@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   node:
-    image: repository.chainbase.com/network/chainbase-node:v0.2.3
+    image: repository.chainbase.com/network/chainbase-node:v0.2.6
     container_name: manuscript_node
     hostname: manuscript_node
     ports:
