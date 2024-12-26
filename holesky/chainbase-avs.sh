@@ -10,7 +10,7 @@ register_chainbase_avs() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.1" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
     --config /app/node.yaml "register-operator-with-avs"
 }
 
@@ -21,7 +21,7 @@ deregister_chainbase_avs() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.1" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
     --config /app/node.yaml "deregister-operator-with-avs"
 }
 
@@ -48,7 +48,7 @@ test_manuscript_node() {
     --volume "./node.yaml":"/app/node.yaml" \
     --volume "/var/run/docker.sock:/var/run/docker.sock"\
     --network "holesky_avs_network" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.1" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
     --config /app/node.yaml "test-manuscript-node-task"
 }
 
@@ -59,8 +59,46 @@ update_node_socket() {
     --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
     --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
     --volume "./node.yaml":"/app/node.yaml" \
-    "repository.chainbase.com/network/chainbase-cli:v0.2.1" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
     --config /app/node.yaml "update-operator-socket"
+}
+
+stake_c_tokens() {
+  if [ -z "$1" ]; then
+      echo "Error: Amount is required. Please provide the amount to stake."
+      return 1
+  fi
+  amount="$1"
+  echo "Stake C tokens into staking contract. Operator address: $OPERATOR_ADDRESS ,C token amount: $amount"
+  docker run --env-file .env \
+    --rm \
+    --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
+    --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
+    --volume "./node.yaml":"/app/node.yaml" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
+    --config /app/node.yaml "stake-into-staking" --amount "$amount"
+}
+
+unstake_c_tokens() {
+  echo "Unstake C tokens from staking contract. Operator address: $OPERATOR_ADDRESS"
+  docker run --env-file .env \
+    --rm \
+    --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
+    --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
+    --volume "./node.yaml":"/app/node.yaml" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
+    --config /app/node.yaml "unstake-from-staking"
+}
+
+withdraw_c_tokens() {
+  echo "Withdraw C tokens from staking contract. Operator address: $OPERATOR_ADDRESS"
+  docker run --env-file .env \
+    --rm \
+    --volume "${NODE_ECDSA_KEY_FILE_PATH}":"/app/node.ecdsa.key.json" \
+    --volume "${NODE_BLS_KEY_FILE_PATH}":"/app/node.bls.key.json" \
+    --volume "./node.yaml":"/app/node.yaml" \
+    "repository.chainbase.com/network/chainbase-cli:v0.2.9" \
+    --config /app/node.yaml "withdraw-from-staking"
 }
 
 update_node_version() {
@@ -69,7 +107,7 @@ update_node_version() {
 }
 
 print_help() {
-  echo "Usage: $0 {register|deregister|run|stop|test|socket|update|help}"
+  echo "Usage: $0 {register|deregister|run|stop|test|socket|update|stake|unstake|withdraw|help}"
   echo "Commands:"
   echo "  register      Register the Chainbase AVS"
   echo "  deregister    Deregister the Chainbase AVS"
@@ -78,6 +116,9 @@ print_help() {
   echo "  test          Run test task on Chainbase AVS manuscript node"
   echo "  socket        Update manuscript node socket on chain"
   echo "  update        Update manuscript node version"
+  echo "  stake         Stake C tokens into staking contract"
+  echo "  unstake       Unstake C tokens from staking contract"
+  echo "  withdraw      Withdraw C tokens from staking contract"
   echo "  help          Display this help message"
 }
 
@@ -103,6 +144,15 @@ case "$1" in
     ;;
   update)
     update_node_version
+    ;;
+  stake)
+    stake_c_tokens "$2"
+    ;;
+  unstake)
+    unstake_c_tokens
+    ;;
+  withdraw)
+    withdraw_c_tokens
     ;;
   help)
     print_help
