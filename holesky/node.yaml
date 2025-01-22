@@ -33,8 +33,8 @@ job_manager_host: chainbase_jobmanager
 job_manager_port: 8081
 
 # Chainbase RPC URL
-chainbase_rpc_url: https://testnet.s.chainbase.com
+chainbase_rpc_url: https://base-sepolia-rpc.publicnode.com
 
 # Staking Contract
-c_contract_address: 0xe30a02df61b661140938b8e0b910cd81b466a46b
-staking_contract_address: 0x721b03DF571aFd7CE5702176cF5979d1d863B815
+c_contract_address: 0xF494b1883F029D8172d192D8074e5e82F1F9dAe7
+staking_contract_address: 0x957c914e71179215672635b435162f1e582b9df0
