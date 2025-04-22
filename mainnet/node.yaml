@@ -1,5 +1,5 @@
 # this sets the logger level (true = info, false = debug)
-production: false
+production: true
 # avs contract
 avs_registry_coordinator_address: 0x28c486660aFF4C3ffC671cb72Ff36FeA214e8dE1
 operator_state_retriever_address: 0x95376d028Cad10259E30d6565D460E01aB652EB9
